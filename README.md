@@ -2,6 +2,11 @@
 
 Ce dépôt contient quatre projets réalisés en SQL, 3 d'entre eux visant à gérer une facette différente d'une entreprise. Ces projets incluent la gestion d'une **location de ski**, un **site e-commerce**, un **CRM (Customer Relationship Management)** et une **gestion de films**. Chaque projet comporte une base de données avec plusieurs tables pour modéliser les informations pertinentes et des requêtes pour interagir avec les données.
 
+## Documentation
+
+Une documentation détaillée est disponible dans chaque dossier de projets.
+Voici toutefois une explication brève de chaque projets :
+
 ## 1. **Location de Ski**
 Ce projet permet de gérer une entreprise de location de skis. Il inclut les informations sur les **clients**, **équipements de ski**, **réservations** et **factures**. Le but est de suivre la location des équipements par les clients, de vérifier les stocks disponibles et de gérer les facturations.
 
