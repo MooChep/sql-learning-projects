@@ -4,7 +4,7 @@ Ce dépôt contient quatre projets réalisés en SQL, 3 d'entre eux visant à g�
 
 ## Documentation
 
-Une documentation détaillée est disponible dans chaque dossier de projets.
+Une documentation détaillée est disponible dans chaque dossier de projets.  
 Voici toutefois une explication brève de chaque projets :
 
 ## 1. **Location de Ski**
