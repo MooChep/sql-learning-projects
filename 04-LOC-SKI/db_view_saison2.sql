@@ -16,10 +16,32 @@ FROM lignesFic lF
 INNER JOIN fiches f ON f.noFic = lF.noFic
 INNER JOIN clients c ON c.noCli = f.noCli
 INNER JOIN articles a ON a.refart = lF.refart
-WHERE c.nom = "Dupond" AND c.prenom = "Jean"
+WHERE c.nom = "Dupond" AND c.prenom = "Jean";
 
 -- Liste de tous les articles (référence, désignation et libellé de la catégorie) dont le libellé de la catégorie contient ski.
 
 SELECT a.refart, a.designation, cat.libelle
 FROM articles a 
 INNER JOIN categories cat ON a.codeCate = cat.codeCate
+WHERE cat.libelle LIKE "Ski%"
+;
+
+-- Calcul du montant de chaque fiche soldée et du montant total des fiches.
+
+SELECT f.noFic AS numeroFiche, 
+sum((DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour) as montantFiche, info.total,
+f.etat
+FROM fiches f 
+INNER JOIN lignesFic lF ON lF.noFic = f.noFic
+INNER JOIN articles a ON a.refart = lF.refart
+INNER JOIN categories cat ON cat.codeCate = a.codeCate
+INNER JOIN grilleTarifs gT ON gT.codeCate = cat.codeCate
+INNER JOIN tarifs t ON t.codeTarif = gT.codeTarif
+INNER JOIN (
+SELECT  
+l.noFic,
+SUM( (DATEDIFF(IFNULL(retour, NOW()+1),depart)+1)*prixJour) as total
+FROM lignesfic l
+INNER JOIN articles a ON l.refart=a.refart
+INNER JOIN grilletarifs g ON (a.codeGam=g.codeGam AND a.codeCate=g.codeCate)
+INNER JOIN tarifs t ON g.codeTarif = t.codeTarif) info ON info.noFic = f.noFic
