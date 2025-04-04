@@ -105,5 +105,5 @@ INNER JOIN lignesFic lF ON lF.noFic = f.noFic
 INNER JOIN articles a ON a.refart = lF.refart
 INNER JOIN categories cat ON cat.codeCate = a.codeCate
 INNER JOIN grilleTarifs gT ON gT.codeCate = cat.codeCate
-INNER JOIN tarifs t ON t.codeTarif = gT.codeTarif
+INNER JOIN tarifs t ON t.codeTarif = gT.codeTarif;
 
