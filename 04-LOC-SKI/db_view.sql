@@ -38,19 +38,32 @@ GROUP BY g.codeGam
 ORDER BY g.codeGam;
 
 -- Détail de la fiche n°1002 avec Total
-
-SELECT lF.noFic AS noFic, c.nom AS Nom, c.prenom AS 'Prénom', lF.refart AS refart, a.designation AS designation, lF.depart AS depart, lF.retour AS retour, t.prixJour as 'Prix Jour', ((SELECT DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour )AS montant
-
-FROM fiches f 
-INNER JOIN clients c ON c.noCli = f.noCli
-INNER JOIN lignesFic lF ON lF.noFic = f.noFic
-INNER JOIN articles a ON a.refart = lF.refart
-INNER JOIN categories cat ON cat.codeCate = a.codeCate
-INNER JOIN grilleTarifs gT ON gT.codeCate = cat.codeCate
-INNER JOIN tarifs t ON t.codeTarif = gT.codeTarif
-WHERE lF.noFic LIKE '1002'
-GROUP BY lF.refart
-;
+SELECT  f.noFic, 
+nom, 
+prenom, 
+a.refart, 
+designation, 
+depart, 
+retour, 
+prixJour,
+(DATEDIFF(IFNULL(retour, NOW()+1),depart)+1)*prixJour as Montant, Total
+FROM 
+fiches f
+JOIN clients c USING (noCli)
+JOIN lignesfic l ON f.noFic = l.noFic
+JOIN articles a ON l.refart=a.refart
+JOIN grilletarifs g ON (a.codeGam=g.codeGam AND a.codeCate=g.codeCate)
+JOIN tarifs t ON g.codeTarif = t.codeTarif
+JOIN (
+SELECT  
+l.noFic,
+SUM( (DATEDIFF(IFNULL(retour, NOW()+1),depart)+1)*prixJour) as total
+FROM lignesfic l
+JOIN articles a ON l.refart=a.refart
+JOIN grilletarifs g ON (a.codeGam=g.codeGam AND a.codeCate=g.codeCate)
+JOIN tarifs t ON g.codeTarif = t.codeTarif
+WHERE l.noFic=1002
+GROUP BY l.noFic ) info ON info.noFic = f.noFic;
  
 -- Grille des tarifs
 SELECT cat.libelle as libelle, g.libelle as LibelleGamme, t.libelle as LibelleTarifs, t.prixJour AS prixJour
