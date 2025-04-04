@@ -72,13 +72,19 @@ GROUP BY a.refart;
 
 -- Calcul du nombre moyen d’articles loués par fiche de location 
 SELECT AVG(nbLig) AS "Moyenne Article Loués" FROM( 
-
 SELECT lF.noFic as NumeroFiche, count(lF.noLig) as nbLig
 FROM lignesFic lF
 GROUP BY lF.noFic
-) AS subquery
+) AS subquery;
 
+-- Calcul du nombre de fiches de location établies pour les catégories de location Ski alpin, Surf et Patinette
 
+SELECT c.libelle as catégories, count(lF.noFic) as nombreDeLocations
+FROM articles a
+INNER JOIN lignesFic lF ON a.refart = lF.refart
+INNER JOIN categories c ON c.codeCate = a.codeCate
+WHERE a.codeCate IN ("PA", "SA", "SURF")
+GROUP BY a.codeCate;
 
 
 
