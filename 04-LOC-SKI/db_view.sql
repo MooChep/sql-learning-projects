@@ -26,9 +26,7 @@ INNER JOIN categories cat ON cat.codeCate = a.codeCate
 INNER JOIN grilleTarifs gT ON gT.codeCate = cat.codeCate
 INNER JOIN tarifs t ON t.codeTarif = gT.codeTarif
 WHERE lF.noFic LIKE '1002'
-GROUP BY lF.refart
-
-;
+GROUP BY lF.refart;
 
 
 -- Prix journalier moyen de location par gamme
@@ -36,13 +34,12 @@ SELECT g.libelle AS Gamme, AVG(t.prixJour) AS 'tarif journalier moyen'
 FROM tarifs t
 INNER JOIN grilleTarifs gT ON gT.codeTarif = t.codeTarif
 INNER JOIN gammes g ON g.codeGam = gT.codeGam
-GROUP BY g.codeGam;
+GROUP BY g.codeGam
+ORDER BY g.codeGam;
 
 -- Détail de la fiche n°1002 avec Total
 
 SELECT lF.noFic AS noFic, c.nom AS Nom, c.prenom AS 'Prénom', lF.refart AS refart, a.designation AS designation, lF.depart AS depart, lF.retour AS retour, t.prixJour as 'Prix Jour', ((SELECT DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour )AS montant
-
--- SUM(( DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour ) 
 
 FROM fiches f 
 INNER JOIN clients c ON c.noCli = f.noCli
@@ -86,7 +83,14 @@ INNER JOIN categories c ON c.codeCate = a.codeCate
 WHERE a.codeCate IN ("PA", "SA", "SURF")
 GROUP BY a.codeCate;
 
+-- Calcul du montant moyen des fiches de location
 
-
-
+SELECT avg((DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour )AS montant
+FROM fiches f 
+INNER JOIN clients c ON c.noCli = f.noCli
+INNER JOIN lignesFic lF ON lF.noFic = f.noFic
+INNER JOIN articles a ON a.refart = lF.refart
+INNER JOIN categories cat ON cat.codeCate = a.codeCate
+INNER JOIN grilleTarifs gT ON gT.codeCate = cat.codeCate
+INNER JOIN tarifs t ON t.codeTarif = gT.codeTarif
 
