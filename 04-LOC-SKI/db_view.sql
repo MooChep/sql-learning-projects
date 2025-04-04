@@ -40,10 +40,10 @@ GROUP BY g.codeGam;
 
 -- Détail de la fiche n°1002 avec Total
 
-SELECT lF.noFic AS noFic, c.nom AS Nom, c.prenom AS 'Prénom', lF.refart AS refart, a.designation AS designation, lF.depart AS depart, lF.retour AS retour, t.prixJour as 'Prix Jour', ((SELECT DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour )AS montant, 200
+SELECT lF.noFic AS noFic, c.nom AS Nom, c.prenom AS 'Prénom', lF.refart AS refart, a.designation AS designation, lF.depart AS depart, lF.retour AS retour, t.prixJour as 'Prix Jour', ((SELECT DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour )AS montant
 
 -- SUM(( DATEDIFF(IF(lF.retour IS NULL,NOW(),lF.retour), lF.depart)+1) * t.prixJour ) 
-AS Total
+
 FROM fiches f 
 INNER JOIN clients c ON c.noCli = f.noCli
 INNER JOIN lignesFic lF ON lF.noFic = f.noFic
@@ -64,17 +64,21 @@ INNER JOIN categories cat ON cat.codeCate = gT.codeCate
 ORDER BY g.codeGam;
 
 -- Liste des location de la categorie Surf 
-SELECT a.refart AS 'Ref. Article', a.designation AS 'Désignation', COUNT(codeCate) AS nbLocation
+SELECT a.refart AS 'Ref. Article', a.designation AS 'Désignation', COUNT(lF.noFic) AS nbLocation
 FROM articles a
+INNER JOIN lignesFic lF ON a.refart = lF.refart
 WHERE a.refart like 'S%'
 GROUP BY a.refart;
 
 -- Calcul du nombre moyen d’articles loués par fiche de location 
+SELECT AVG(nbLig) AS "Moyenne Article Loués" FROM( 
 
--- Pas encore bon
-SELECT (SELECT SUM(lF.noLig) AS NbMoyen
-FROM lignesFic lF )/COUNT(lF.noFic) 
-FROM lignesFic lF 
+SELECT lF.noFic as NumeroFiche, count(lF.noLig) as nbLig
+FROM lignesFic lF
+GROUP BY lF.noFic
+) AS subquery
+
+
 
 
 
